@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Fasnacht",
+    "rule": "ostern - 47",
+    "region": "Aarau",
+    "beschreibung": "Traditioneller Fasnachtsumzug."
+  },
+  {
+    "name": "Nuss Nuss",
+    "date": "2025-11-26",
+    "region": "Aarau",
+    "beschreibung": "Kinder ziehen mit Trommeln und bitten um Nüsse."
+  },
+  {
+    "name": "Pfingsten",
+    "rule": "ostern + 49",
+    "region": "Österreich",
+    "beschreibung": "Pfingstmontag – traditionell Prozessionen."
+  }
+]
