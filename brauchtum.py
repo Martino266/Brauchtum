@@ -1,51 +1,52 @@
 import streamlit as st
 import json
-import datetime
-from dateutil.easter import easter
+from datetime import datetime
+import folium
+from streamlit_folium import st_folium
 
-st.set_page_config(page_title="Online Brauchtumskalender", page_icon="📅")
+st.set_page_config(page_title="Interaktiver Brauchtumskalender", layout="wide")
+st.title("📅 Interaktiver Brauchtumskalender")
+st.write("Klicke auf ein Datum, um alle Bräuche an diesem Tag zu sehen.")
 
-st.title("📅 Online-Brauchtumskalender")
-st.write("Ein interaktiver Kalender mit traditionellen Festen und Bräuchen.")
-
-# Jahr wählen
-jahr = st.number_input("Wähle ein Jahr:", min_value=1900, max_value=2100, value=datetime.date.today().year)
-
-# Bräuche laden
+# JSON-Datei laden
 with open("braeuche.json", encoding="utf-8") as f:
     braeuche = json.load(f)
 
+# Datumsauswahl
+selected_date = st.date_input("Wähle ein Datum:")
 
-def berechne_datum(brauch, jahr):
-    if "rule" in brauch:
-        base, op, offset = brauch["rule"].split()
-        datum = None
-        if base == "ostern":
-            datum = easter(jahr)
-        if datum:
-            if op == "-":
-                datum -= datetime.timedelta(days=int(offset))
-            elif op == "+":
-                datum += datetime.timedelta(days=int(offset))
-        return datum
-    elif "date" in brauch:
-        return datetime.date.fromisoformat(brauch["date"])
-    return None
+# Filter nach Region
+regions = sorted(list(set([b["region"] for b in braeuche])))
+selected_region = st.selectbox("Region wählen", ["Alle"] + regions)
 
+# Bräuche für das Datum filtern
+events_today = [
+    b for b in braeuche
+    if datetime.fromisoformat(b["date"]).date() == selected_date and
+    (selected_region == "Alle" or b["region"] == selected_region)
+]
 
-# Ergebnisse berechnen
-resultate = []
-for b in braeuche:
-    datum = berechne_datum(b, jahr)
-    if datum:
-        resultate.append({
-            "Datum": datum.strftime("%d.%m.%Y"),
-            "Name": b["name"],
-            "Region": b["region"],
-            "Beschreibung": b.get("beschreibung", "")
-        })
+# Ergebnisse anzeigen
+if events_today:
+    st.subheader(f"Bräuche am {selected_date.strftime('%d.%m.%Y')}:")
+    for event in events_today:
+        st.markdown(f"### {event['name']} – {event['region']} um {event['zeit']}")
+        st.markdown(f"{event['beschreibung']}")
+        if event.get("bild_url"):
+            st.image(event["bild_url"], caption=event["name"])
+        st.markdown("---")
 
-# Sortieren nach Datum
-resultate = sorted(resultate, key=lambda x: datetime.datetime.strptime(x["Datum"], "%d.%m.%Y"))
+    # Karte anzeigen, wenn Koordinaten vorhanden
+    if any("lat" in e and "lon" in e for e in events_today):
+        m = folium.Map(location=[47.3769, 8.5417], zoom_start=6)
+        for event in events_today:
+            if "lat" in event and "lon" in event:
+                folium.Marker(
+                    [event["lat"], event["lon"]],
+                    popup=f"{event['name']} – {event['zeit']}"
+                ).add_to(m)
+        st.subheader("📍 Karte der Bräuche")
+        st_data = st_folium(m, width=700, height=450)
 
-st.table(resultate)
+else:
+    st.info("An diesem Tag finden keine Bräuche statt.")

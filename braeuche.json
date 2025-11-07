@@ -1,20 +1,32 @@
 [
   {
-    "name": "Fasnacht",
-    "rule": "ostern - 47",
-    "region": "Aarau",
-    "beschreibung": "Traditioneller Fasnachtsumzug."
-  },
-  {
     "name": "Nuss Nuss",
     "date": "2025-11-26",
     "region": "Aarau",
-    "beschreibung": "Kinder ziehen mit Trommeln und bitten um Nüsse."
+    "zeit": "15:00 Uhr",
+    "beschreibung": "Kinder ziehen mit Trommeln durch die Stadt und bitten um Nüsse.",
+    "lat": 47.3927,
+    "lon": 8.0444,
+    "bild_url": "https://upload.wikimedia.org/wikipedia/commons/1/12/Aarau_city.jpg"
+  },
+  {
+    "name": "Almabtrieb",
+    "date": "2025-09-12",
+    "region": "Tirol",
+    "zeit": "10:00 Uhr",
+    "beschreibung": "Vieh wird geschmückt ins Tal getrieben.",
+    "lat": 47.2692,
+    "lon": 11.4041,
+    "bild_url": ""
   },
   {
     "name": "Pfingsten",
-    "rule": "ostern + 49",
+    "date": "2025-05-25",
     "region": "Österreich",
-    "beschreibung": "Pfingstmontag – traditionell Prozessionen."
+    "zeit": "Ganztägig",
+    "beschreibung": "Pfingstmontag – Prozessionen und Festlichkeiten.",
+    "lat": 48.2082,
+    "lon": 16.3738,
+    "bild_url": ""
   }
 ]
